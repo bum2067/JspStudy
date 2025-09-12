@@ -144,5 +144,32 @@ public class HkDao extends Database {
 
 		return count > 0 ? true : false;
 	}
+	
+	public boolean deleteBoard(int seq) {
+		int count = 0;
+
+		Connection conn = null;
+		PreparedStatement psmt = null;
+
+		String sql = " DELETE FROM HKBOARD WHERE SEQ=? ";
+
+		try {
+			conn = getConnection();
+
+			// 3단계 : 쿼리준비
+			psmt = conn.prepareStatement(sql);
+			
+			psmt.setInt(1, seq);
+
+			count = psmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(null, psmt, conn);
+		}
+
+		return count > 0 ? true : false;
+	}
 
 }

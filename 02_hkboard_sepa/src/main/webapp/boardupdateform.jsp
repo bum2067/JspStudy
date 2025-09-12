@@ -14,7 +14,7 @@
 <%
 	//전달된 파라미터 받기
 	String sseq=request.getParameter("seq");
-	int seq=Integer.parseInt(sseq);		//"5"->정수 5 변환
+	int seq=Integer.parseInt(sseq);	
 	
 	HkDao dao=new HkDao();
 	HkDto dto=dao.getBoard(seq);
