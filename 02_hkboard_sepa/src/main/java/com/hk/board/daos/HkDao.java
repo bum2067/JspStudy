@@ -44,6 +44,7 @@ public class HkDao extends Database {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			
 		} finally {
 			close(rs, psmt, conn);
 		}
