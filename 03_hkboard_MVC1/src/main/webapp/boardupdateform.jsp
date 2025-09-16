@@ -12,16 +12,13 @@
 <title>Insert title here</title>
 </head>
 <%
-	//전달된 파라미터 받기
-	String sseq=request.getParameter("seq");
-	int seq=Integer.parseInt(sseq);	
+	HkDto dto = (HkDto)request.getAttribute("dto");
 	
-	HkDao dao=new HkDao();
-	HkDto dto=dao.getBoard(seq);
 %>
 <body>
 <h1>게시판 수정하기</h1>
-<form action="boardupdate.jsp" method="post">
+<form action="boardController.jsp" method="post">
+<input type="hidden" name="command" value="boardupdate">
 <input type="hidden" name="seq" value="<%=dto.getSeq()%>"/>
 
 <table border="1">
@@ -41,11 +38,9 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input type="submit" value="수정완료"
-								 onclick="updateForm()"/>
-								 
-			<input type="button" value="글목록" 
-						onclick="location.href='boardlist.jsp'"/>
+			<input type="submit" value="수정완료" />								 
+			<input type="button" value="글목록"
+							onclick="location.href='boardController.jsp?command=boardlist'"/>
 		</td>
 	</tr>
 </table>

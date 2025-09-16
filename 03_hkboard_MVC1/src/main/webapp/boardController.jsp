@@ -3,9 +3,8 @@
 <%@page import="com.hk.board.daos.HkDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%request.setCharacterEncoding("UTF-8"); %>
+<%request.setCharacterEncoding("utf-8"); %>
 <%response.setContentType("text/html;charset=UTF-8"); %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,55 +13,101 @@
 </head>
 <body>
 <%
-	//1단계 : command값 받기 -> 어떤 요청인지 확인 값 받기
-	//		-요청값 : 별도의 command라는 값을 전달
-	//	 	-요청 url : boardlist.board		: MVC2 방식일때
-	String command = request.getParameter("command");
+	//1단계:command값 받기 -> 어떤 요청인지 확인 값 받기
+	//    -요청값: 별도의 command라는 값을 전달
+	//    -요청url: boardlist.board  :MVC2방식일때
+	String command=request.getParameter("command");
 	
-	//2단계 : DAO객체 생성
-	HkDao dao = new HkDao();
+	//2단계: DAO객체 생성
+	HkDao dao=new HkDao();
 	
-	//3단계 : 요청 분기
-	if(command.equals("boardlist")) {	//글목록 요청 처리
-		//4단계 : 파라미터 받기 (글목록에서는 받을 파라미터가 x)
+	//3단계:요청 분기
+	if(command.equals("boardlist")){  // 글목록 요청 처리
+		//4단계:파라미터 받기 (글목록에서는 받을 파라미터가 X)
 		
-		//5단계 : dao 메서드 실행
-		List<HkDto> list = dao.getAllList();	//DB로부터 글목록 데이터
+		//5단계:dao 메서드 실행
+		List<HkDto> list=dao.getAllList();//DB로부터 글목록 데이터 가져오기
 		
-		//6단계 : Scope객체에 담기
-		//request스코프 : 객체 전달범위
-		// 요청페이지 -----> 응답페이지
-		request.setAttribute("list", list);
+		//6단계:Scope 객체에 담기
+		//request스코프: 객체 전달범위 
+		// 요청페이지 ----> 응답페이지
+		request.setAttribute("list", list);//["list":list]
 		
-		//7단계 : 페이지 응답(이동)
+		//7단계: 페이지 응답(이동)
 		pageContext.forward("boardlist.jsp");
-		
-	}else if(command.equals("insertboardform")) {
+	}else if(command.equals("insertboardform")){//글쓰기폼요청
 		response.sendRedirect("insertboardform.jsp");
-	}else if(command.equals("insertboard")) {
+	}else if(command.equals("insertboard")){
 		//id, title, content
-		String id = request.getParameter("id");
-		String title = request.getParameter("title");
-		String content = request.getParameter("content");
+		String id=request.getParameter("id");
+		String title=request.getParameter("title");
+		String content=request.getParameter("content");
 		
-		boolean isS = dao.insertBoard(new HkDto(id, title, content));
-		if(isS) {
+		boolean isS=dao.insertBoard(new HkDto(id,title,content));
+		if(isS){
 			response.sendRedirect("boardController.jsp?command=boardlist");
 		}else{
 			response.sendRedirect("error.jsp");
 		}
-	}else if(command.equals("boarddetail")) {
+	}else if(command.equals("boarddetail")){//상세보기
 		//전달된 파라미터 받기
 		String sseq=request.getParameter("seq");
 		int seq=Integer.parseInt(sseq);//"5"->정수 5 변환
 		
-		HkDto dto=dao.getBoard(seq);	//db에서 글 하나에 대한 정보 가져오기
-		//dto객체를 boarddetail.jsp로 전달해야함
+		HkDto dto=dao.getBoard(seq);//db에서 글하나에 대한 정보가져오기
+		//dto객체를 boarddeatil.jsp로 전달해야 함
 		request.setAttribute("dto", dto);
 		pageContext.forward("boarddetail.jsp");
-	}
-	
-%>
+		
+	}else if(command.equals("boardupdateform")){
+		//수정폼 이동
+		String sseq = request.getParameter("seq");
+		int seq = Integer.parseInt(sseq);
+		
+		HkDto dto = dao.getBoard(seq);
+		request.setAttribute("dto", dto);
+		
+		pageContext.forward("boardupdateform.jsp");
+		
+		
+	}else if(command.equals("boardupdate")){
+		//수정하기
+		String sseq=request.getParameter("seq");
+		int seq = Integer.parseInt(sseq);
+		String title=request.getParameter("title");
+		String content=request.getParameter("content");
+		
+		boolean isS=dao.insertBoard(new HkDto(seq,title,content));
+		if(isS){
+			response.sendRedirect("boardController.jsp?"
+									+ "command=boarddetail&seq="+seq);
+		}else{
+			response.sendRedirect("error.jsp");
+		}
+	}else if(command.equals("boarddelete")){
+		//삭제하기
+		String sseq=request.getParameter("seq");
+		int seq = Integer.parseInt(sseq);
+		boolean isS = dao.deleteBoard(seq); // seqs 배열을 넘김
+	    if(isS){
+	        response.sendRedirect("boardController.jsp?command=boardlist");
+	    }else{
+	        response.sendRedirect("error.jsp");
+	    }
 
+		
+		
+	}else if(command.equals("muldel")){
+	    // 여러글 삭제s
+	    String[] seqs = request.getParameterValues("seq"); // 여러 개 값 받아오기
+	    boolean isS = dao.mulDel(seqs); // seqs 배열을 넘김
+	    if(isS){
+	        response.sendRedirect("boardController.jsp?command=boardlist");
+	    }else{
+	        response.sendRedirect("error.jsp");
+	    }
+	}
+
+%>
 </body>
 </html>

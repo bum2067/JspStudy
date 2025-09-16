@@ -43,7 +43,7 @@
 
 								 
 			<input type="button" value="글목록" 
-						onclick="location.href='boardController.jsp?command=boardlist'"/>
+						onclick="location.href='boardlist.jsp'"/>
 		</td>
 	</tr>
 </table>
