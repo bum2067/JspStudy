@@ -3,7 +3,7 @@ package com.hk.dtos;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserDto implements Serializable {
+public class UserDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private int seq;
@@ -15,7 +15,7 @@ public class UserDto implements Serializable {
 	private String enabled;
 	private String role;
 	private Date regDate;
-
+	
 	public UserDto() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -34,12 +34,19 @@ public class UserDto implements Serializable {
 		this.role = role;
 		this.regDate = regDate;
 	}
-
+	
 	public UserDto(String id, String name, String password, String address, String email) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
+		this.address = address;
+		this.email = email;
+	}
+
+	public UserDto(String id, String address, String email) {
+		super();
+		this.id = id;
 		this.address = address;
 		this.email = email;
 	}
@@ -126,5 +133,6 @@ public class UserDto implements Serializable {
 				+ address + ", email=" + email + ", enabled=" + enabled + ", role=" + role + ", regDate=" + regDate
 				+ "]";
 	}
-
+	
+	
 }
